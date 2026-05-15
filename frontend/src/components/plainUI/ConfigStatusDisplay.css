@@ -1,0 +1,203 @@
+/* 基础样式 */
+.config-status-outer-container {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.config-status-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.config-status-content {
+  position: absolute;
+  z-index: 2;
+}
+
+.config-status-container {
+  background-color: rgba(0, 0, 0, 0.305);
+  border-radius: 10px;
+  padding: 20px;
+  color: rgb(255, 255, 255);
+  max-width: 100%;
+  backdrop-filter: blur(5px);
+}
+
+.overlay {
+  width: 100%;
+}
+
+.config-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 150, 255, 0.8);
+}
+
+.config-section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 15px;
+}
+
+.config-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section-title {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #4fc3f7;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+/* 为WebSocket端口行添加特殊样式 */
+.websocket-row {
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.websocket-row .status-label {
+  min-width: 120px;
+}
+
+.websocket-row .status-value {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.status-label {
+  font-weight: bold;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.status-value {
+  color: #4caf50;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+/* 端口编辑样式 */
+.status-value.edit-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.port-input {
+  width: 80px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 14px;
+}
+
+.port-edit-button,
+.port-save-button,
+.port-cancel-button {
+  margin-left: 8px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.port-edit-button {
+  background-color: rgba(0, 123, 255, 0.7);
+  color: white;
+}
+
+.port-save-button {
+  background-color: rgba(40, 167, 69, 0.7);
+  color: white;
+}
+
+.port-cancel-button {
+  background-color: rgba(220, 53, 69, 0.7);
+  color: white;
+}
+
+.port-edit-button:hover {
+  background-color: rgba(0, 123, 255, 0.9);
+}
+
+.port-save-button:hover {
+  background-color: rgba(40, 167, 69, 0.9);
+}
+
+.port-cancel-button:hover {
+  background-color: rgba(220, 53, 69, 0.9);
+}
+
+/* 进入AR按钮样式 */
+.enter-ar-button {
+  padding: 10px 20px;
+  background-color: rgba(76, 175, 80, 0.8);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.enter-ar-button:hover:not(:disabled) {
+  background-color: rgba(76, 175, 80, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.enter-ar-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 禁用状态的样式 */
+.enter-ar-button.disabled,
+.enter-ar-button:disabled {
+  background-color: rgba(169, 169, 169, 0.8); /* 灰色 */
+  color: #f0f0f0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.enter-ar-button.disabled:hover,
+.enter-ar-button:disabled:hover {
+  background-color: rgba(169, 169, 169, 0.8);
+  transform: none;
+  box-shadow: none;
+}
+
+.enter-ar-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

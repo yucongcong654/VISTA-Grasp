@@ -1,0 +1,64 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+if [ -f "${PROJECT_ROOT}/.env" ]; then
+  set -a
+  . "${PROJECT_ROOT}/.env"
+  set +a
+fi
+
+: "${TELEOP_ROBOT_PORT:=5175}"
+: "${TELEOP_ROBOT_SSH_USER:=rm}"
+: "${TELEOP_ROBOT_SSH_HOST:=192.168.31.247}"
+: "${TELEOP_ROBOT_WORKDIR:=~/catkin_ws}"
+: "${TELEOP_ROBOT_SETUP:=devel/setup.zsh}"
+: "${TELEOP_ROBOT_LAUNCH_PACKAGE:=dual_arm_robot_demo}"
+: "${TELEOP_ROBOT_LAUNCH_FILE:=teleop_control_start.launch}"
+: "${TELEOP_ROBOT_BRIDGE_SCRIPT:=src/dual_arm_robot_demo/scripts/teleop_ros_bridge.py}"
+: "${TELEOP_ROBOT_BRIDGE_HOST:=localhost}"
+: "${TELEOP_ROBOT_NO_HEAD:=false}"
+: "${TELEOP_CAMERA0_TOPIC:=/camera_0/color/image_raw}"
+: "${TELEOP_CAMERA1_TOPIC:=/camera_1/color/image_raw}"
+: "${TELEOP_HEAD_CONTROL_TOPIC:=/servo_control/move}"
+: "${TELEOP_HEAD_CONTROL_YAW_PITCH_TOPIC:=/servo_control/move_double}"
+: "${TELEOP_LIFT_CONTROL_TOPIC:=/l_arm/rm_driver/Lift_SetHeight}"
+: "${TELEOP_LIFT_SPEED_CONTROL_TOPIC:=/l_arm/rm_driver/Lift_SetSpeed}"
+: "${TELEOP_LEFT_ARM_CONTROL_TOPIC:=/l_arm/rm_driver/JointPos}"
+: "${TELEOP_RIGHT_ARM_CONTROL_TOPIC:=/r_arm/rm_driver/JointPos}"
+: "${TELEOP_LEFT_HAND_CONTROL_TOPIC:=/rx_gripper_control}"
+: "${TELEOP_RIGHT_GRIPPER_CONTROL_TOPIC:=/gripper_control}"
+: "${TELEOP_UNDERPAN_CONTROL_TOPIC:=/base_cmd_vel}"
+: "${TELEOP_LEFT_ARM_STATE_TOPIC:=/l_arm/joint_states}"
+: "${TELEOP_RIGHT_ARM_STATE_TOPIC:=/r_arm/joint_states}"
+
+NO_HEAD_ARG=""
+if [ "${TELEOP_ROBOT_NO_HEAD}" = "true" ] || [ "${TELEOP_ROBOT_NO_HEAD}" = "1" ]; then
+  NO_HEAD_ARG="--nohead"
+fi
+
+ssh -L "${TELEOP_ROBOT_PORT}:localhost:${TELEOP_ROBOT_PORT}" "${TELEOP_ROBOT_SSH_USER}@${TELEOP_ROBOT_SSH_HOST}" -t "
+export TELEOP_ROBOT_BRIDGE_HOST='${TELEOP_ROBOT_BRIDGE_HOST}';
+export TELEOP_ROBOT_PORT='${TELEOP_ROBOT_PORT}';
+export TELEOP_ROBOT_NO_HEAD='${TELEOP_ROBOT_NO_HEAD}';
+export TELEOP_CAMERA0_TOPIC='${TELEOP_CAMERA0_TOPIC}';
+export TELEOP_CAMERA1_TOPIC='${TELEOP_CAMERA1_TOPIC}';
+export TELEOP_HEAD_CONTROL_TOPIC='${TELEOP_HEAD_CONTROL_TOPIC}';
+export TELEOP_HEAD_CONTROL_YAW_PITCH_TOPIC='${TELEOP_HEAD_CONTROL_YAW_PITCH_TOPIC}';
+export TELEOP_LIFT_CONTROL_TOPIC='${TELEOP_LIFT_CONTROL_TOPIC}';
+export TELEOP_LIFT_SPEED_CONTROL_TOPIC='${TELEOP_LIFT_SPEED_CONTROL_TOPIC}';
+export TELEOP_LEFT_ARM_CONTROL_TOPIC='${TELEOP_LEFT_ARM_CONTROL_TOPIC}';
+export TELEOP_RIGHT_ARM_CONTROL_TOPIC='${TELEOP_RIGHT_ARM_CONTROL_TOPIC}';
+export TELEOP_LEFT_HAND_CONTROL_TOPIC='${TELEOP_LEFT_HAND_CONTROL_TOPIC}';
+export TELEOP_RIGHT_GRIPPER_CONTROL_TOPIC='${TELEOP_RIGHT_GRIPPER_CONTROL_TOPIC}';
+export TELEOP_UNDERPAN_CONTROL_TOPIC='${TELEOP_UNDERPAN_CONTROL_TOPIC}';
+export TELEOP_LEFT_ARM_STATE_TOPIC='${TELEOP_LEFT_ARM_STATE_TOPIC}';
+export TELEOP_RIGHT_ARM_STATE_TOPIC='${TELEOP_RIGHT_ARM_STATE_TOPIC}';
+tmux new-session -d -s robot;
+tmux send-keys -t robot \"cd ${TELEOP_ROBOT_WORKDIR}; source ${TELEOP_ROBOT_SETUP}; roslaunch ${TELEOP_ROBOT_LAUNCH_PACKAGE} ${TELEOP_ROBOT_LAUNCH_FILE}\" C-m;
+tmux split-window -v;
+tmux send-keys -t robot \"cd ${TELEOP_ROBOT_WORKDIR}; source ${TELEOP_ROBOT_SETUP}; python3 ${TELEOP_ROBOT_BRIDGE_SCRIPT} --host ${TELEOP_ROBOT_BRIDGE_HOST} --port ${TELEOP_ROBOT_PORT} ${NO_HEAD_ARG}\" C-m;
+tmux -2 attach-session -t robot;
+"
