@@ -23,7 +23,8 @@
 
 <div align="center">
 
-![🥽 第一人称视角实时遥操](docs/images/image43.mp4) ![🤖 真实机器人第三人称视角](docs/images/media7.mp4)
+[![第一人称实时遥操](https://img.youtube.com/vi/N8eEL0k6SGA/0.jpg)](https://www.youtube.com/watch?v=N8eEL0k6SGA)
+![🥽 第三人称视角实时遥操](https://img.youtube.com/vi/hG1B2dXn4QY/0.jpg)](https://www.youtube.com/watch?v=hG1B2dXn4QY)
 
 _(图示：基于 Meta Quest 3 的实时遥操双视角演示)_
 
